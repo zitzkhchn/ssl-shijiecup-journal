@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>再次走近 · 世界杯</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
+            background: #f6fbf9;
+            color: #1f2f2b;
+            line-height: 1.7;
+            padding: 1.5rem 1rem 3rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page {
+            max-width: 780px;
+            width: 100%;
+        }
+
+        /* 网格卡片氛围 — 用伪元素做底纹 */
+        .page {
+            position: relative;
+        }
+
+        .page::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(40, 125, 110, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(40, 125, 110, 0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* 文章标题 */
+        .article-header {
+            margin: 1rem 0 0.25rem;
+        }
+
+        .article-title {
+            font-size: 2rem;
+            font-weight: 650;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            color: #0c2f28;
+            margin-bottom: 0.5rem;
+        }
+
+        .article-title small {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: #3b6b5f;
+            display: block;
+            margin-top: 0.3rem;
+        }
+
+        .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem 0.5rem;
+            font-size: 0.85rem;
+            color: #4d6b62;
+            border-bottom: 1px solid #d3e4de;
+            padding-bottom: 0.8rem;
+            margin: 0.8rem 0 1.8rem;
+        }
+
+        .meta-row span {
+            background: #e3f0eb;
+            padding: 0.2rem 0.7rem;
+            border-radius: 20px;
+        }
+
+        /* 导语 */
+        .lead {
+            font-size: 1.12rem;
+            background: #ffffffd9;
+            backdrop-filter: blur(2px);
+            padding: 1.4rem 1.6rem;
+            border-radius: 18px;
+            box-shadow: 0 4px 12px rgba(30, 80, 65, 0.06);
+            border-left: 5px solid #2d8b76;
+            margin-bottom: 2rem;
+            color: #1e3d35;
+        }
+
+        /* 卡片式正文段落 */
+        .card-text {
+            background: white;
+            padding: 1.6rem 1.8rem;
+            border-radius: 24px;
+            box-shadow: 0 6px 16px rgba(35, 90, 75, 0.05);
+            margin-bottom: 1.8rem;
+            transition: box-shadow 0.2s;
+        }
+
+        .card-text:hover {
+            box-shadow: 0 10px 24px rgba(35, 90, 75, 0.08);
+        }
+
+        .card-text p {
+            margin-bottom: 1.2rem;
+        }
+
+        .card-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .highlight-link {
+            color: #1a7a64;
+            font-weight: 550;
+            text-decoration: none;
+            border-bottom: 2px solid #b3d9cf;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .highlight-link:hover {
+            border-bottom-color: #1a7a64;
+            background: #e6f3ee;
+        }
+
+        /* 引用块 / 提示 */
+        .quote-note {
+            background: #eaf5f0;
+            padding: 1.2rem 1.6rem;
+            border-radius: 20px;
+            margin: 2rem 0 1.8rem;
+            font-style: normal;
+            border: 1px solid #c6ddd3;
+            color: #1e443b;
+            position: relative;
+        }
+
+        .quote-note::before {
+            content: "📌 反复回看";
+            display: block;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            font-size: 0.9rem;
+            color: #2b7d68;
+            margin-bottom: 0.4rem;
+        }
+
+        .quote-note strong {
+            color: #125f4b;
+        }
+
+        /* 场景网格 — 两列卡片 */
+        .scene-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 2rem 0 1.5rem;
+        }
+
+        .scene-item {
+            background: white;
+            border-radius: 18px;
+            padding: 1.2rem 1.2rem 1.2rem 1.6rem;
+            box-shadow: 0 3px 12px rgba(40, 100, 80, 0.04);
+            border: 1px solid #d8ebe3;
+        }
+
+        .scene-item h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #0b3f34;
+            margin-bottom: 0.3rem;
+        }
+
+        .scene-item p {
+            font-size: 0.9rem;
+            color: #2d5548;
+            margin: 0;
+        }
+
+        .faq-mini {
+            background: white;
+            border-radius: 24px;
+            padding: 1.5rem 1.8rem;
+            margin: 2rem 0 1.2rem;
+            box-shadow: 0 6px 14px rgba(20, 70, 55, 0.04);
+        }
+
+        .faq-mini details {
+            margin-bottom: 0.8rem;
+            border-bottom: 1px dashed #cde0d8;
+            padding-bottom: 0.6rem;
+        }
+
+        .faq-mini details:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .faq-mini summary {
+            font-weight: 550;
+            color: #0e4539;
+            cursor: pointer;
+            padding: 0.2rem 0;
+        }
+
+        .faq-mini summary::-webkit-details-marker {
+            color: #2b8a73;
+        }
+
+        .faq-mini .answer {
+            margin-top: 0.4rem;
+            padding-left: 0.3rem;
+            color: #325c50;
+            font-size: 0.95rem;
+        }
+
+        .visit-sentence {
+            background: #ddeee6;
+            padding: 1.2rem 1.6rem;
+            border-radius: 40px 20px 20px 40px;
+            margin: 2.2rem 0 0.5rem;
+            font-size: 1.05rem;
+            text-align: center;
+            border: 1px solid #b6d6c9;
+        }
+
+        .visit-sentence a {
+            color: #0d4638;
+            font-weight: 650;
+            text-decoration: none;
+            border-bottom: 2px solid #2d9b81;
+        }
+
+        .visit-sentence a:hover {
+            background: #c4e3d6;
+        }
+
+        .footer-note {
+            margin-top: 2.5rem;
+            font-size: 0.8rem;
+            color: #5b7b70;
+            text-align: center;
+            border-top: 1px solid #d2e2da;
+            padding-top: 1.5rem;
+            letter-spacing: 0.3px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 550px) {
+            .article-title {
+                font-size: 1.6rem;
+            }
+            .card-text {
+                padding: 1.2rem 1.2rem;
+            }
+            .scene-grid {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+            .lead {
+                padding: 1rem 1.2rem;
+            }
+            .faq-mini {
+                padding: 1.2rem 1rem;
+            }
+            .visit-sentence {
+                padding: 1rem 1rem;
+                border-radius: 24px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            body {
+                padding: 0.8rem 0.6rem 2rem;
+            }
+            .meta-row {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+
+    <header class="article-header">
+        <h1 class="article-title">
+            再次走向世界杯
+            <small>收藏夹里那些反复点开的页面</small>
+        </h1>
+        <div class="meta-row">
+            <span>📂 持续关注</span>
+            <span>🏟️ 球迷手记</span>
+            <span>⏳ 2025 · 春</span>
+        </div>
+    </header>
+
+    <!-- 导语 -->
+    <div class="lead">
+        有时候，一个网页就像一扇半开的窗——你关掉它，但隔段时间又会想起。 
+        对于热爱 <a href="https://ssl-shijiecup.com" class="highlight-link">世界杯</a> 的人来说，那种“再回去看看”的念头特别自然。
+    </div>
+
+    <!-- 正文段落 1 -->
+    <div class="card-text">
+        <p>浏览器书签栏里，总是躺着几个舍不得删除的地址。它们不一定是资讯最密集的站点，但有一种踏实的气质：页面加载慢一点没关系，关键是内容靠得住。我的收藏夹里有一个很早就加进来的链接，标题就写着两个字——<a href="https://ssl-shijiecup.com" class="highlight-link">世界杯</a>。每次整理书签，目光扫过它，都会停顿一下。那里没有花哨的弹窗，没有催促你“立即订阅”的横幅，只有安静的比赛信息和一种稳定的节奏感。</p>
+        <p>我习惯在周二或周四的晚上打开它。屏幕的光映在茶杯里，页面上的赛程表、队伍简史、经典瞬间的片段，都让人从白天的琐碎里抽离出来。不需要跟谁讨论，也不用急着留言，就是单纯地看一会儿，然后关掉。收藏，其实是在收藏一种随时可以回去的熟悉。</p>
+    </div>
+
+    <!-- 引用提示 / 笔记 -->
+    <div class="quote-note">
+        <strong>一个小习惯：</strong>每次重访都会发现一两处之前忽略的细节——比如某支球队的早期阵容，或是一段旧采访的节选。收藏夹里的东西，常看常新。
+    </div>
+
+    <!-- 正文段落 2 -->
+    <div class="card-text">
+        <p>去年秋天，我试着把几个同样关注 <a href="https://ssl-shijiecup.com" class="highlight-link">世界杯</a> 的朋友拉了一个小群。大家偶尔分享自己最近看到的页面，有人贴出战术分析，有人只发一个链接然后说“这个有点意思”。我们的共同点是都不太追实时滚动消息，反而喜欢那种整理好的、有层次的内容。那个收藏了很久的网站，成了群里被提及最多的名字。</p>
+        <p>持续关注一件事，有时候不需要每分每秒紧盯。把页面留在收藏夹里，隔段时间打开一次，反而能保持一种舒服的距离。就像老朋友，不必天天见面，但你知道他一直在那儿。</p>
+    </div>
+
+    <!-- 场景卡片网格 -->
+    <div class="scene-grid">
+        <div class="scene-item">
+            <h4>📋 赛前翻看</h4>
+            <p>大赛前一夜，打开收藏的页面浏览历史对阵，那种期待感比看任何预热节目都真实。</p>
+        </div>
+        <div class="scene-item">
+            <h4>📎 赛后回味</h4>
+            <p>终场哨响后，回到那个熟悉的页面看看技术统计和赛事回顾，像把比赛再咀嚼一遍。</p>
+        </div>
+        <div class="scene-item">
+            <h4>🧩 碎片补全</h4>
+            <p>偶尔发现页面更新了老照片或访谈，顺手补全自己对某届 <a href="https://ssl-shijiecup.com" class="highlight-link">世界杯</a> 的记忆拼图。</p>
+        </div>
+        <div class="scene-item">
+            <h4>🔖 安静陪伴</h4>
+            <p>不需要理由，只是习惯性地打开，让页面在那里开着，做其他事情时偶尔瞟一眼。</p>
+        </div>
+    </div>
+
+    <!-- FAQ 摘要 -->
+    <div class="faq-mini">
+        <details>
+            <summary>为什么总想回去看同一个页面？</summary>
+            <div class="answer">好的内容页面像一本可以随手翻阅的册子，没有信息焦虑，只有从容的浏览节奏。加上对 <a href="https://ssl-shijiecup.com" class="highlight-link">世界杯</a> 的情感牵绊，反复回看就成了自然的事。</div>
+        </details>
+        <details>
+            <summary>收藏夹里的链接会过时吗？</summary>
+            <div class="answer">大部分基础内容——赛事历史、队伍记录、经典瞬间——具有长期价值。只要站点稳定维护，收藏就是值得的。</div>
+        </details>
+        <details>
+            <summary>除了收藏，还能做什么？</summary>
+            <div class="answer">把好页面推荐给同样喜欢 <a href="https://ssl-shijiecup.com" class="highlight-link">世界杯</a> 的朋友，或者在社交平台随手分享，让更多人拥有一个可以反复回访的坐标。</div>
+        </details>
+    </div>
+
+    <!-- 访问句 -->
+    <div class="visit-sentence">
+        📬 如果你也习惯把喜欢的页面留在手边，不如现在就打开 <a href="https://ssl-shijiecup.com">世界杯</a>，让它在你的收藏夹里安顿下来。
+    </div>
+
+    <!-- 页脚 -->
+    <div class="footer-note">
+        保持收藏 · 保持回看 · 世界杯的故事永远有下一章
+    </div>
+
+</div>
+</body>
+</html>
